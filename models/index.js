@@ -1,7 +1,7 @@
 import '../utils/shims';
 import mongoose from 'mongoose';
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/mernAuth', {
+mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/healthfulKitchen', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: true,
