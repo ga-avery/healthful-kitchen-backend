@@ -14,3 +14,12 @@ const apiGet = async (params, init = { "method": "GET", "headers": { "x-rapidapi
 
 // { keys: value }
 apiGet({ maxVitaminB2: 1000, maxCholesterol: 1000, intolerances: 'peanut' });
+
+/* ---CREATE--- */
+
+/* ---READ--- */
+router.get('/search', apiGet);
+
+/* ---UPDATE--- */
+
+/* ---DESTROY--- */
