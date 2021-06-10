@@ -7,6 +7,7 @@ import myPassport from './config/passport';
 // Controllers
 import users from './api/users';
 import books from './api/books';
+import recipe from './api/recipe';
 
 const PORT = process.env.PORT || 80;
 const app = express();
@@ -31,6 +32,7 @@ app.get('/ping', (_, rs) => {
 
 app.use('/api/users', users);
 app.use('/api/books', books);
+app.use('/api/recipe', recipe);
 // 404 route
 app.get('/*', (_, rs) => {
   rs.status(404).json({ message: 'Data not found' });
