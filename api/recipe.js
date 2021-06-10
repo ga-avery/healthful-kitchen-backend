@@ -1,42 +1,40 @@
 import fetch from 'node-fetch';
 import '../utils/shims';
 import fs from 'fs/promises';
-console.log(typeof process.env.API_KEY);
 
-const apiGet = async (params, init = {
-  "method": "GET",
-  "headers": {
-    "x-rapidapi-key": process.env.API_KEY,
-    "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
-  }
-}) => {
-  let paramString = ['?']; // => ['?']
-  for (const key of Object.keys(params)) { // => Object null prototype {intolerances: 'peanut', maxCholesterol: 1500}
+/**
+ * parameters are a string for the url optionally including url params on the
+ * end of the url
+ * @param {string} url 
+ * @returns {Promise<{}>} json from the api
+ */
+const apiFetch = async url => {
+  const init = {
+    "method": "GET",
+    "headers": {
+      "x-rapidapi-key": process.env.API_KEY,
+      "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
+    }
+  };
+  const response = await fetch(url, init);
+  const json = await response.json();
+  return json;
+};
+
+const complexSearch = async (params) => {
+  let paramString = ['?'];
+  for (const key of Object.keys(params)) {
     const value = params[key];
-    // params = {intolerances: 'peanut'}
-    // params.intolerances => 'peanut' 
-    // params["intolerances"] => 'peanut'
-    paramString.push(`${key}=${value}&`); // ['?', 'intolerances=peanut&', 'maxCholesterol=1500&']
+    paramString.push(`${key}=${value}&`);
   }
   paramString = paramString.join('');
-  const response = await fetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch' + paramString, init);
-  const json = await response.json();
+  const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch' + paramString);
   console.log(json);
 };
 
-// { keys: value }
-// apiGet({ maxVitaminB2: 1000, maxCholesterol: 1000, intolerances: 'peanut' });
-// apiGet(812966);
-const init = {
-  "method": "GET",
-  "headers": {
-    "x-rapidapi-key": process.env.API_KEY,
-    "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
-  }
-};
+
 const findRecipeById = async id => {
-  const response = await fetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/' + id + '/information', init);
-  const json = await response.json();
+  const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/' + id + '/information');
   console.log(json);
   // await fs.writeFile('results.json.new', JSON.stringify(json));
 };
