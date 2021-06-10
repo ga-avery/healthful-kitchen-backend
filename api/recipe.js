@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import '../utils/shims';
 import fs from 'fs/promises';
+import router from './books';
 
 /**
  * parameters are a string for the url optionally including url params on the
@@ -38,4 +39,16 @@ const findRecipeById = async id => {
   console.log(json);
   // await fs.writeFile('results.json.new', JSON.stringify(json));
 };
-findRecipeById(695486);
+//findRecipeById(695486);
+
+// CREATE
+
+// READ
+router.get('/search', complexSearch);
+router.get('/:id', findRecipeById);
+// UPDATE
+
+// DELETE
+
+
+export default router;
