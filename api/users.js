@@ -104,19 +104,19 @@ const profile = async (rq, rs) => {
 
 const update = async (rq, rs) => {
   console.log('---IN UPDATE ROUTE---');
-  await User.updateOne({ id: rq.body.id }, rq.body);
-  const user = await User.findOne({ id: rq.body.id });
+  await User.findByIdAndUpdate(rq.body.id, rq.body, { useFindAndModify: true });
+  const user = await User.findOne({ _id: rq.body.id });
   console.log(user);
-  rs.redirect(`/profile`);
+  rs.json({ name: user.name, email: user.email });
 };
 const userDelete = async (rq, rs) => {
   try {
-    const user = await User.findByIdAndDelete(rq.body.id);
+    const user = await User.findByIdAndDelete(rq.body.id, { useFindAndModify: true });
   } catch (e) {
     console.error('error deleting profile:', rq.body.id);
     console.error('/profile/edit', e);
   }
-  rs.redirect('/');
+  rs.json({ message: 'user deleted :)' });
 };
 
 /* CREATE */
