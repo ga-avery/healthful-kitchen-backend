@@ -109,6 +109,15 @@ const update = async (rq, rs) => {
   console.log(user);
   rs.redirect(`/profile`);
 };
+const userDelete = async (rq, rs) => {
+  try {
+    const user = await User.findByIdAndDelete(rq.body.id);
+  } catch (e) {
+    console.error('error deleting profile:', rq.body.id);
+    console.error('/profile/edit', e);
+  }
+  rs.redirect('/');
+};
 
 /* CREATE */
 router.post('/signup', signup);
@@ -121,6 +130,7 @@ router.get('/profile', passport.authenticate('jwt', { session: false }), profile
 /* UPDATE */
 router.put('/profile/edit', passport.authenticate('jwt', { session: false }), update);
 /* DELETE */
+router.delete('/profile/edit', passport.authenticate('jwt', { session: false }), userDelete);
 
 
 
