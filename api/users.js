@@ -129,6 +129,7 @@ router.get('/profile', passport.authenticate('jwt', { session: false }), profile
 
 /* UPDATE */
 router.put('/profile/edit', passport.authenticate('jwt', { session: false }), update);
+
 /* DELETE */
 router.delete('/profile/edit', passport.authenticate('jwt', { session: false }), userDelete);
 
