@@ -104,11 +104,19 @@ const profile = async (rq, rs) => {
 
 const update = async (rq, rs) => {
   console.log('---IN UPDATE ROUTE---');
-  console.log(rq.body);
-  await User.updateOne({ id: rq.body.id }, rq.body);
-  const user = await User.findOne({ name: rq.body.name, email: rq.body.email});
+  await User.findByIdAndUpdate(rq.body.id, rq.body, { useFindAndModify: true });
+  const user = await User.findOne({ _id: rq.body.id });
   console.log(user);
-  rs.redirect(`/profile`);
+  rs.json({ name: user.name, email: user.email });
+};
+const userDelete = async (rq, rs) => {
+  try {
+    const user = await User.findByIdAndDelete(rq.body.id, { useFindAndModify: true });
+  } catch (e) {
+    console.error('error deleting profile:', rq.body.id);
+    console.error('/profile/edit', e);
+  }
+  rs.json({ message: 'user deleted :)' });
 };
 
 /* CREATE */
@@ -123,6 +131,7 @@ router.get('/profile', passport.authenticate('jwt', { session: false }), profile
 router.put('/profile/edit', passport.authenticate('jwt', { session: false }), update);
 
 /* DELETE */
+router.delete('/profile/edit', passport.authenticate('jwt', { session: false }), userDelete);
 
 
 
