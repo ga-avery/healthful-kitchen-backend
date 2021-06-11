@@ -27,7 +27,7 @@ const findRecipe = async (req, res) => {
   console.log('--INSIDE findRecipe---');
   console.log('req.body', req.body);
   let intolerances = req.body.userIntolerance;
-  intolerances = intolerances.join(' ');
+  intolerances = intolerances.join('%2C%20');
   console.log(intolerances);
   try {
     let paramString = ['?'];
