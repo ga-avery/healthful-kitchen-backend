@@ -40,7 +40,6 @@ const findRecipe = async (req, res) => {
     console.log(paramString);
     const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch' + paramString);
     console.log(json);
-    res.json(json);
   } catch (error) {
     console.log('---ERROR IN findRecipe---');
     console.log(error);
