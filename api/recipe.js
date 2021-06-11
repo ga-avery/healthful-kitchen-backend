@@ -23,19 +23,16 @@ const apiFetch = async url => {
   return json;
 };
 
+// Main search route (by diet, condition, etc.)
 const findRecipe = async (req, res) => {
   console.log('--INSIDE findRecipe---');
   console.log('req.body', req.body);
   let intolerances = req.body.userIntolerance;
-  intolerances = intolerances.join(' ');
+  intolerances = intolerances.join('%2C%20');
   console.log(intolerances);
   try {
     let paramString = ['?'];
     paramString.push('intolerances=', intolerances, '&');
-    // for (const key of Object.key(req.body)) {
-    //   const value = req.params[key];
-    //   paramString.push(`${key}=${value}&`);
-    // }
     paramString = paramString.join('');
     console.log(paramString);
     const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch' + paramString);
@@ -48,30 +45,24 @@ const findRecipe = async (req, res) => {
   };
 };
 
-// const complexSearch = async (params) => {
-//   console.log(params);
-//   let paramString = ['?'];
-//   for (const key of Object.keys(params)) {
-//     const value = params[key];
-//     paramString.push(`${key}=${value}&`);
-//   }
-//   paramString = paramString.join('');
-//   const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch' + paramString);
-//   console.log(json);
-// };
-
-const findRecipeById = async id => {
-  const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/' + id + '/information');
-  console.log(json);
-  // await fs.writeFile('results.json.new', JSON.stringify(json));
+const recipeDetail = async (req, res) => {
+  console.log(req.body);
+  const id = req.body.id;
+  try {
+    const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/' + id + '/information');
+    console.log(json);
+    res.json(json);    
+  } catch (error) {
+    console.log('---ERROR IN recipeDetail---');
+    console.log(error);
+  }
 };
-//findRecipeById(695486);
 
 // CREATE
 
 // READ
 router.post('/search', findRecipe);
-router.get('/:id', findRecipeById);
+router.get('/:id', recipeDetail);
 // UPDATE
 
 // DELETE
