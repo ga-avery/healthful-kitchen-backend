@@ -19,3 +19,4 @@ db.on('error', error => {
 // export all models
 export { User } from './User';
 export { Book } from './Book';
+

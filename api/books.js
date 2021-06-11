@@ -3,6 +3,7 @@ import express from 'express';
 const router = express.Router();
 import passport from 'passport';
 import { Book } from '../models';
+
 const index = async (_, rs) => {
   console.log('inside of /api/books');
   try {
@@ -31,16 +32,18 @@ const create = async (rq, rs) => {
     const newBook = await Book.create({ title, author, price, pages, isbn, genre });
     rs.json({ book: newBook });
   } catch (error) {
-    console.error('eror inside of POST to /api/books', error);
+    console.error('error inside of POST to /api/books', error);
     return rs.status(400).json({ message: 'book was not created' });
   }
 };
+
 const update = async (rq, rs) => {
   await Book.updateOne({ title: rq.body.title }, rq.body);
   const book = await Book.findOne({ title: rq.body.title });
   console.log(book);
   rs.redirect(`/api/books/${book.id}`);
 };
+
 const deleteBook = async (rq, rs) => {
   const { id } = rq.params;
   try {
