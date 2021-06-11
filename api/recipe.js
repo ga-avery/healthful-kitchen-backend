@@ -28,15 +28,17 @@ const findRecipe = async (req, res) => {
   console.log('--INSIDE findRecipe---');
   console.log('req.body', req.body);
   let intolerances = req.body.userIntolerance;
+  let diet = 'diet=' + req.body.userDiet;
   intolerances = intolerances.join('%2C%20');
   console.log(intolerances);
+  console.log(diet);
   try {
-    let paramString = ['?'];
-    paramString.push('intolerances=', intolerances, '&');
+    let paramString = [];
+    paramString.push('intolerances=', intolerances);
     paramString = paramString.join('');
     console.log(paramString);
-    const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch' + paramString);
-    // console.log(json);
+    const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch?'+ paramString + '&' + diet);
+    console.log(json);
     res.json(json);
   } catch (error) {
     console.log('---ERROR IN findRecipe---');

@@ -104,8 +104,9 @@ const profile = async (rq, rs) => {
 
 const update = async (rq, rs) => {
   console.log('---IN UPDATE ROUTE---');
-  await User.updateOne({ name: rq.body.name, email: rq.body.email }, rq.body);
-  const user = await User.findOne({ id: rq.body.id });
+  console.log(rq.body);
+  await User.updateOne({ id: rq.body.id }, rq.body);
+  const user = await User.findOne({ name: rq.body.name, email: rq.body.email});
   console.log(user);
   rs.redirect(`/profile`);
 };
@@ -120,6 +121,7 @@ router.get('/profile', passport.authenticate('jwt', { session: false }), profile
 
 /* UPDATE */
 router.put('/profile/edit', passport.authenticate('jwt', { session: false }), update);
+
 /* DELETE */
 
 
