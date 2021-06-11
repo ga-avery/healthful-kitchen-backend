@@ -17,6 +17,7 @@ const apiFetch = async url => {
       "x-rapidapi-host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
     }
   };
+  console.log('fetching', url);
   const response = await fetch(url, init);
   const json = await response.json();
   return json;
@@ -24,12 +25,13 @@ const apiFetch = async url => {
 
 const findRecipe = async (req, res) => {
   console.log('--INSIDE findRecipe---');
-  console.log('req.body.userIntolerance ->', req.body.userIntolerance);
-  let intolerance = req.body.userIntolerance;
-  intolerance = intolerance.join('%');
-  console.log(intolerance)
+  console.log('req.body', req.body);
+  let intolerances = req.body.userIntolerance;
+  intolerances = intolerances.join(' ');
+  console.log(intolerances);
   try {
     let paramString = ['?'];
+    paramString.push('intolerances=', intolerances, '&');
     // for (const key of Object.key(req.body)) {
     //   const value = req.params[key];
     //   paramString.push(`${key}=${value}&`);
@@ -37,11 +39,11 @@ const findRecipe = async (req, res) => {
     paramString = paramString.join('');
     console.log(paramString);
     const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch' + paramString);
-    console.log(json);    
+    console.log(json);
   } catch (error) {
-    console.log('---ERROR IN findRecipe---')
+    console.log('---ERROR IN findRecipe---');
     console.log(error);
-    
+
   };
 };
 
@@ -58,10 +60,10 @@ const findRecipe = async (req, res) => {
 // };
 
 const findRecipeById = async id => {
-   const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/' + id + '/information');
-   console.log(json);
-   // await fs.writeFile('results.json.new', JSON.stringify(json));
- };
+  const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/' + id + '/information');
+  console.log(json);
+  // await fs.writeFile('results.json.new', JSON.stringify(json));
+};
 //findRecipeById(695486);
 
 // CREATE
