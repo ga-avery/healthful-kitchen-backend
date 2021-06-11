@@ -34,6 +34,16 @@ app.get('/ping', (_, rs) => {
 app.use('/api/users', users);
 app.use('/api/books', books);
 app.use('/api/recipe', recipe);
+
+app.post('/api/*', async (rq, rs) => {
+  rs.json(rq.body);
+});
+app.delete('/api/*', async (rq, rs) => {
+  rs.json(rq.body);
+});
+app.put('/api/*', async (rq, rs) => {
+  rs.json(rq.body);
+});
 // 404 route
 app.get('/*', (_, rs) => {
   rs.status(404).json({ message: 'Data not found' });
