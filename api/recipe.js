@@ -46,9 +46,11 @@ const findRecipe = async (req, res) => {
 };
 
 const recipeDetail = async (req, res) => {
+  console.log(req.body);
   const id = req.body.id;
   try {
     const json = await apiFetch('https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/' + id + '/information');
+    console.log(json);
     res.json(json);    
   } catch (error) {
     console.log('---ERROR IN recipeDetail---');
@@ -62,7 +64,7 @@ const recipeDetail = async (req, res) => {
 router.post('/search', findRecipe);
 router.get('/:id', recipeDetail);
 // UPDATE
-router.put('/', passport.authenticate('jwt', { session: false }), update);
+
 // DELETE
 
 
