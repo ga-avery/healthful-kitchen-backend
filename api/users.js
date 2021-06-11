@@ -104,7 +104,7 @@ const profile = async (rq, rs) => {
 
 const update = async (rq, rs) => {
   console.log('---IN UPDATE ROUTE---');
-  await User.updateOne({ name: rq.body.name, email: rq.body.email }, rq.body);
+  await User.updateOne({ id: rq.body.id }, rq.body);
   const user = await User.findOne({ id: rq.body.id });
   console.log(user);
   rs.redirect(`/profile`);
