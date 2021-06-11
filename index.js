@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 80;
 const app = express();
 
 app.set('json spaces', 2);
+app.set('port', PORT);
 
 // Middleware
 app.use(cors());
@@ -38,6 +39,6 @@ app.get('/*', (_, rs) => {
   rs.status(404).json({ message: 'Data not found' });
 });
 
-app.listen(PORT, () => {
+app.listen(app.get('port'), () => {
   console.log(`Server is listening on port: ${PORT}`);
 });

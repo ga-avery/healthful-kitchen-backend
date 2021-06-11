@@ -1,7 +1,13 @@
 import '../utils/shims';
 import mongoose from 'mongoose';
+let connectionString;
+if (process.env.NODE_ENV === 'production') {
+  connectionString = process.env.DB_URL;
+} else {
+  connectionString = 'mongodb://localhost/healthfulKitchen';
+}
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost/healthfulKitchen', {
+mongoose.connect(connectionString, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: true,
