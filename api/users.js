@@ -8,14 +8,15 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 import { User } from '../models';
 
-
-const test = async (_, rs) => {
-  rs.json({ message: 'User endpoint OK!' });
-};
-
+/**
+ * signup expects a body object (either through json or form-urlencoded) that
+ * describes a name, email, and password. using these it creates a unique user
+ * and returns that data to the frontend.
+ * @param {Request} rq 
+ * @param {Response} rs 
+ * @returns {*} User definition
+ */
 const signup = async (rq, rs) => {
-  console.log('--- inside of signup ---');
-  console.log('rq.body', rq.body);
   const { name, email, password } = rq.body;
   try {
     // see if a user exists in db by email
@@ -51,20 +52,31 @@ const signup = async (rq, rs) => {
   }
 };
 
+/**
+ * login expects an email and password
+ * @param {Request} rq 
+ * @param {Response} rs 
+ * @returns {{success: boolean, token: string, userData: string}} javascript
+ * object containing a JWT for the current session
+ */
 const login = async (rq, rs) => {
-
   const { email, password } = rq.body;
+
   try {
     // find email
     const user = await User.findOne({ email });
+
     if (!user) {
       return rs.status(400).json({ message: 'email or password incorrect' });
     }
+
     const isMatch = await bcrypt.compare(password, user.password);
     console.log('password correct:', isMatch);
+
     if (!isMatch) {
       return rs.status(400).json({ message: 'either email or password is incorrect' });
     }
+
     user.timesLoggedIn++;
     await user.save();
     // create token payload
@@ -74,6 +86,7 @@ const login = async (rq, rs) => {
       name: user.name,
       expiredToken: Date.now()
     };
+    // inner try-catch for token signing
     try {
       const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
       console.log('token', token);
@@ -87,11 +100,23 @@ const login = async (rq, rs) => {
       console.error('[token verify]', error);
       rs.status(400).json({ message: 'session has ended, please log in' });
     }
+
   } catch (error) {
     console.error('[/api/users/login]', error);
   }
 };
 
+/**
+ * profile returns information about the current user, excluding the password
+ * and other secret backend information.
+ * @param {Request} rq 
+ * @param {Response} rs 
+ * @returns {{
+ *  id: string,
+ *  name: string,
+ *  email: string
+ * }}
+ */
 const profile = async (rq, rs) => {
   console.log('inside of profile route');
   rs.json({
@@ -102,6 +127,14 @@ const profile = async (rq, rs) => {
   });
 };
 
+/**
+ * update accepts a user's id and updated profile information (currently only
+ * user's name and user's email) then updates the database with the new
+ * information.
+ * @param {Request} rq 
+ * @param {Response} rs 
+ * @returns {{name: string, email: string}}
+ */
 const update = async (rq, rs) => {
   console.log('---IN UPDATE ROUTE---');
   await User.findByIdAndUpdate(rq.body.id, rq.body, { useFindAndModify: true });
@@ -110,6 +143,11 @@ const update = async (rq, rs) => {
   rs.json({ name: user.name, email: user.email });
 };
 
+/**
+ * userDelete deletes a user given its id
+ * @param {Request} rq 
+ * @param {Response} rs 
+ */
 const userDelete = async (rq, rs) => {
   console.log('--- in userDelete route ---');
   console.log(rq.body);
@@ -129,7 +167,6 @@ router.post('/signup', signup);
 router.post('/login', login);
 
 /* READ */
-router.get('/test', test);
 router.get('/profile', passport.authenticate('jwt', { session: false }), profile);
 
 /* UPDATE */
