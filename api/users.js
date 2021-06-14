@@ -109,9 +109,14 @@ const update = async (rq, rs) => {
   console.log(user);
   rs.json({ name: user.name, email: user.email });
 };
+
 const userDelete = async (rq, rs) => {
+  console.log('--- in userDelete route ---');
+  console.log(rq.body);
   try {
+    const user1 = await User.findOne({ _id: rq.body?.id });
     const user = await User.findByIdAndDelete(rq.body.id, { useFindAndModify: true });
+    console.log(user1, user);
   } catch (e) {
     console.error('error deleting profile:', rq.body.id);
     console.error('/profile/edit', e);
