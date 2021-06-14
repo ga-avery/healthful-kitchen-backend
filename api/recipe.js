@@ -69,7 +69,6 @@ const recipeDetail = async (req, res) => {
   }
 };
 
-
 // CREATE
 
 // READ
@@ -78,6 +77,5 @@ router.get('/:id', recipeDetail);
 // UPDATE
 
 // DELETE
-
 
 export default router;
