@@ -110,6 +110,7 @@ const update = async (rq, rs) => {
   rs.json({ name: user.name, email: user.email });
 };
 const userDelete = async (rq, rs) => {
+  console.log('---IN DELETE ROUTE---', rq.body)
   try {
     const user = await User.findByIdAndDelete(rq.body.id, { useFindAndModify: true });
   } catch (e) {
